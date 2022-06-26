@@ -73,6 +73,9 @@ class User(AbstractBaseUser):
 class Hobby(models.Model):
     name = models.CharField("취미 이름", max_length=20)
 
+    def __str__(self):
+        return self.name
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, verbose_name="유저", on_delete=models.CASCADE)
     introduction = models.TextField("자기소개")

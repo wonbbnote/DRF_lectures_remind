@@ -3,8 +3,15 @@ from django.contrib.auth import login, logout, authenticate
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from .serializers import UserSerializer
 
 # Create your views here.
+class UserView(APIView): 
+    def get(self, request):
+		# 사용자 정보조회
+        return Response(UserSerializer(request.user).data)
+        #return Response({'message': 'get method!!'})
+
 
 class UserApiView(APIView):
     # 로그인 
