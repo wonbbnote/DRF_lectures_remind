@@ -19,7 +19,6 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
 
-
     review = serializers.SerializerMethodField()
 
     def get_review(self, obj):
@@ -42,7 +41,7 @@ class ProductSerializer(serializers.ModelSerializer):
     def validate(self, data):
         exposure_end_date = data.get("exposure_end_date", "")
         if exposure_end_date and exposure_end_date < datetime.now().date():
-            raise serializers.ValidateError(
+            raise serializers.ValidationError(
                 detail = {"error": "유효하지 않은 노출종료 날짜입니다"}
             )
         return data
@@ -61,6 +60,7 @@ class ProductSerializer(serializers.ModelSerializer):
                 # created= getattr(instance, key).split("\n")[-1]
                 value += f"\n\n{instance.created_date.replace(microsecond=0, tzinfo=None)}에 등록된 상품입니다."
             setattr(instance, key, value)
+        instance.save()
         instance.description = f"{instance.modified_date.replace(microsecond=0, tzinfo =None)}에 수정되었습니다. \n\n"\
             + instance.description 
         instance.save()

@@ -1,8 +1,10 @@
-import datetime as dt
+from datetime import datetime
 from pytz import utc
 from rest_framework.permissions import BasePermission
 from rest_framework.exceptions import APIException
 from rest_framework import status
+from django.utils import timezone
+from datetime import timedelta
 
 class GenericAPIException(APIException):
     def __init__(self, status_code, detail=None, code=None):
@@ -23,7 +25,7 @@ class IsAdminOrAfterSevenDaysFromJoined(BasePermission):
                 "detail" : "서비스를 이용하기 위해 로그인 해주세요."
             }
             raise GenericAPIException(status_code=status.HTTP_401_UNAUTHORIZED,detail=response)
-        if bool(dt.datetime.now(utc) - user.join_date >= dt.timedelta(days=7)) or user.is_admin:
+        if bool(datetime.now(utc) - user.join_date >= timedelta(days=7)) or user.is_admin:
             return True
         if user.is_authenticated and request.method in self.SAFE_METHODS:
             return True
@@ -48,6 +50,6 @@ class RegisteredMoreThanThreeDaysUser(BasePermission):
 
         if user.is_authenticated and request.method in self.SAFE_METHODS:
             return True
-        return bool(user.is_authenticated and request.user.join_date < (timezone.now() - dt.timedelta(days=3)))
+        return bool(user.is_authenticated and request.user.join_date < (timezone.now() - timedelta(minutes=3)))
 
 

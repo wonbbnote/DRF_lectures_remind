@@ -30,6 +30,8 @@ class PostView(APIView):
         user = request.user
         title = request.data.get("title", "")
         contents = request.data.get("contents", "")
+        exposure_st = request.data.get("exposure_start_date", "")
+        exposure_end = request.data.get("exposure_end_date", "")
 
         category_name = request.data.get("category", "")
         category = Category.objects.get(name=category_name)
@@ -42,7 +44,8 @@ class PostView(APIView):
             return Response({"error": "카테고리 지정!"})
 
 
-        new_post = Article.objects.create(author=user, title=title, contents=contents, category=category)
+        new_post = Article.objects.create(author=user, title=title, 
+        contents=contents, category=category, exposure_start_date=exposure_st, exposure_end_date = exposure_end)
         return Response({"message":"글작성 완료!"}, status = status.HTTP_200_OK)
 
 

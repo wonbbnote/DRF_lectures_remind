@@ -16,13 +16,16 @@ class ProductView(APIView):
     permission_classes = [RegisteredMoreThanThreeDaysUser]
     def get(self, request):
         today = datetime.now()
+        # products = Product.objects.all()
         products = Product.objects.filter(
-            Q(exposure_start_date__lte = today, exposure_end_date__gte=today)|
+            Q(exposure_end_date__gte=today, is_active = True)|
             Q(writer= request.user)
         )
+        print(products)
         product_serializer = ProductSerializer(products, many=True).data
         return Response(product_serializer, status=status.HTTP_200_OK)
     
+
     def post(self, request):
         user = request.user
         request.data['writer'] = user.id
@@ -32,6 +35,7 @@ class ProductView(APIView):
             product_serializer.save()
             return Response(product_serializer.data, status=status.HTTP_200_OK)
         return Response(product_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     def put(self, request, product_id):
         product = Product.objects.get(id=product_id)

@@ -10,8 +10,8 @@ class Product(models.Model):
     modified_date = models.DateTimeField("수정시간", auto_now=True)
     exposure_start_date = models.DateField("노출 시작일")
     exposure_end_date = models.DateField("노출 종료일자")
-    is_active = models.BooleanField("활성화여부")
-    price = models.IntegerField("가격")
+    is_active = models.BooleanField("활성화여부", null=True)
+    price = models.IntegerField("가격", null=True)
 
 
 class Review(models.Model):
